@@ -26,6 +26,6 @@
   },
   "devDependencies": {
     "geckodriver": "^1.21.1",
-    "nightwatch": "^1.5.1"
+    "nightwatch": "^1.6.2"
   }
 }

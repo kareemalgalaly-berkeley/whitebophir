@@ -19,6 +19,7 @@
 	<link rel="alternate" hreflang="{{.}}" href="?lang={{.}}" />{{/languages}}
 	<link rel="manifest" href="manifest.json">
 	<meta name="theme-color" content="#C4DFFF" />
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
@@ -58,6 +59,9 @@
 				<input type="text" id="board" name="board" required placeholder="{{{translations.board_name_placeholder}}}" />
 				<input type="submit" value="Go">
 			</form>
+        <p>
+        MatJax test: $$ \frac{yoo_2}{5} $$
+        </p>
 		</div>
 	</main>
 

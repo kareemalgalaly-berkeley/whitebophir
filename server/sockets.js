@@ -54,100 +54,115 @@ function socketConnection(socket) {
    * Function to call when an user joins a board
    * @param {string} name
    */
-  async function joinBoard(name) {
-    // Default to the public board
-    if (!name) name = "anonymous";
+	async function joinBoard(name) {
+		// Default to the public board
+		if (!name) name = "anonymous";
 
-    // Join the board
-    socket.join(name);
+		// Join the board
+		socket.join(name);
 
-    var board = await getBoard(name);
-    board.users.add(socket.id);
-    log("board joined", { board: board.name, users: board.users.size });
-    return board;
-  }
+		var board = await getBoard(name);
+		board.users.add(socket.id);
+		log('board joined', { 'board': board.name, 'users': board.users.size });
 
-  socket.on(
-    "error",
-    noFail(function onError(error) {
-      log("ERROR", error);
-    })
-  );
+		return board;
+	}
 
-  socket.on("getboard", async function onGetBoard(name) {
-    var board = await joinBoard(name);
-    //Send all the board's data as soon as it's loaded
-    socket.emit("broadcast", { _children: board.getAll() });
-  });
+	socket.on("error", noFail(function onError(error) {
+		log("ERROR", error);
+	}));
 
-  socket.on("joinboard", noFail(joinBoard));
+	socket.on("getboard", async function onGetBoard(name) {
+		var board = await joinBoard(name);
+		//Send all the board's data as soon as it's loaded
+		socket.emit("broadcast", { _children: board.getAll() });
+	});
 
-  var lastEmitSecond = (Date.now() / config.MAX_EMIT_COUNT_PERIOD) | 0;
-  var emitCount = 0;
-  socket.on(
-    "broadcast",
-    noFail(function onBroadcast(message) {
-      var currentSecond = (Date.now() / config.MAX_EMIT_COUNT_PERIOD) | 0;
-      if (currentSecond === lastEmitSecond) {
-        emitCount++;
-        if (emitCount > config.MAX_EMIT_COUNT) {
-          var request = socket.client.request;
-          if (emitCount % 100 === 0) {
-            log("BANNED", {
-              user_agent: request.headers["user-agent"],
-              original_ip:
-                request.headers["x-forwarded-for"] ||
-                request.headers["forwarded"],
-              emit_count: emitCount,
-            });
-          }
-          return;
-        }
-      } else {
-        emitCount = 0;
-        lastEmitSecond = currentSecond;
-      }
+	socket.on("joinboard", noFail(joinBoard));
 
-      var boardName = message.board || "anonymous";
-      var data = message.data;
+	var lastEmitSecond = Date.now() / config.MAX_EMIT_COUNT_PERIOD | 0;
+	var emitCount = 0;
+	socket.on('broadcast', noFail(async function onBroadcast(message) {
+		var currentSecond = Date.now() / config.MAX_EMIT_COUNT_PERIOD | 0;
+		if (currentSecond === lastEmitSecond) {
+			emitCount++;
+			if (emitCount > config.MAX_EMIT_COUNT) {
+				var request = socket.client.request;
+				if (emitCount % 100 === 0) {
+					log('BANNED', {
+						user_agent: request.headers['user-agent'],
+						original_ip: request.headers['x-forwarded-for'] || request.headers['forwarded'],
+						emit_count: emitCount
+					});
+				}
+				return;
+			}
+		} else {
+			emitCount = 0;
+			lastEmitSecond = currentSecond;
+		}
 
-      if (!socket.rooms.has(boardName)) socket.join(boardName);
+		var boardName = message.board || "anonymous";
+		var data = message.data;
 
-      if (!data) {
-        console.warn("Received invalid message: %s.", JSON.stringify(message));
-        return;
-      }
+		if (!socket.rooms.hasOwnProperty(boardName)) socket.join(boardName);
 
-      if (
-        !message.data.tool ||
-        config.BLOCKED_TOOLS.includes(message.data.tool)
-      ) {
-        log("BLOCKED MESSAGE", message.data);
-        return;
-      }
+		if (!data) {
+			console.warn("Received invalid message: %s.", JSON.stringify(message));
+			return;
+		}
 
-      // Save the message in the board
-      handleMessage(boardName, data, socket);
+    		if (!message.data.tool || config.BLOCKED_TOOLS.includes(message.data.tool)) {
+			log('BLOCKED MESSAGE', message.data);
+			return;
+		}
+    
+        // start
+		var boardData;
+		if (message.data.type === "doc") {
+			boardData = await getBoard(boardName);
 
-      //Send data to all other users connected on the same board
-      socket.broadcast.to(boardName).emit("broadcast", data);
-    })
-  );
+			if (boardData.existingDocuments >= config.MAX_DOCUMENT_COUNT) {
+				console.warn("Received too many documents");
+				return;
+			}
 
-  socket.on("disconnecting", function onDisconnecting(reason) {
-    socket.rooms.forEach(async function disconnectFrom(room) {
-      if (boards.hasOwnProperty(room)) {
-        var board = await boards[room];
-        board.users.delete(socket.id);
-        var userCount = board.users.size;
-        log("disconnection", { board: board.name, users: board.users.size });
-        if (userCount === 0) {
-          board.save();
-          delete boards[room];
-        }
-      }
-    });
-  });
+			if (message.data.data.length > config.MAX_DOCUMENT_SIZE) {
+				console.warn("Received too large file");
+				return;
+			}
+
+			boardData.existingDocuments += 1;
+		} else if (message.data.type === "delete") {
+			boardData = await getBoard(boardName);
+
+			if (boardData.board[message.data.id].type === "doc") {
+				boardData.existingDocuments -= 1;
+			}
+		}
+        // end
+
+		// Save the message in the board
+		handleMessage(boardName, data, socket);
+
+		//Send data to all other users connected on the same board
+		socket.broadcast.to(boardName).emit('broadcast', data);
+	}));
+
+	socket.on('disconnecting', function onDisconnecting(reason) {
+		Object.keys(socket.rooms).forEach(async function disconnectFrom(room) {
+			if (boards.hasOwnProperty(room)) {
+				var board = await boards[room];
+				board.users.delete(socket.id);
+				var userCount = board.users.size;
+				log('disconnection', { 'board': board.name, 'users': board.users.size });
+				if (userCount === 0) {
+					board.save();
+					delete boards[room];
+				}
+			}
+		});
+	});
 }
 
 function handleMessage(boardName, message, socket) {

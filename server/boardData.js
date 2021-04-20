@@ -226,13 +226,48 @@ class BoardData {
   /** Load the data in the board from a file.
    * @param {string} name - name of the board
    */
+  /*static async load(name) {
+	var boardData = new BoardData(name), data;
+	try {
+		data = await fs.promises.readFile(boardData.file);
+		boardData.board = JSON.parse(data);
+		boardData.existingDocuments = 0;
+		for (id in boardData.board) {
+			boardData.validate(boardData.board[id]);
+			if (boardData.board[id].type === "doc") existingDocuments += 1;
+		}
+		log('disk load', { 'board': boardData.name });
+	} catch (e) {
+		log('empty board creation', {
+			'board': boardData.name,
+			// If the file doesn't exist, this is not an error
+			"error": e.code !== "ENOENT" && e.toString(),
+		});
+		boardData.board = {}
+		if (data) {
+			// There was an error loading the board, but some data was still read
+			var backup = backupFileName(boardData.file);
+			log("Writing the corrupted file to " + backup);
+			try {
+				await fs.promises.writeFile(backup, data);
+			} catch (err) {
+				log("Error writing " + backup + ": " + err);
+			}
+		}
+	}
+	return boardData;
+  }*/
   static async load(name) {
     var boardData = new BoardData(name),
       data;
     try {
       data = await fs.promises.readFile(boardData.file);
       boardData.board = JSON.parse(data);
-      for (const id in boardData.board) boardData.validate(boardData.board[id]);
+      //for (const id in boardData.board) boardData.validate(boardData.board[id]);
+	  for (const id in boardData.board) {
+	  	boardData.validate(boardData.board[id]);
+	  	if (boardData.board[id].type === "doc") existingDocuments += 1;
+	  }
       log("disk load", { board: boardData.name });
     } catch (e) {
       // If the file doesn't exist, this is not an error
