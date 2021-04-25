@@ -23,146 +23,241 @@ function htmlspecialchars(str) {
 }
 
 function renderPath(el, pathstring) {
-  return (
-    "<path " +
-    (el.id ? 'id="' + htmlspecialchars(el.id) + '" ' : "") +
-    'stroke-width="' +
-    (el.size | 0) +
-    '" ' +
-    (el.opacity ? 'opacity="' + parseFloat(el.opacity) + '" ' : "") +
-    'stroke="' +
-    htmlspecialchars(el.color) +
-    '" ' +
-    'd="' +
-    pathstring +
-    '" ' +
-    (el.deltax || el.deltay
-      ? 'transform="translate(' + +el.deltax + "," + +el.deltay + ')"'
-      : "") +
-    "/>"
-  );
+// <<<<<<< HEAD
+//   return (
+//     "<path " +
+//     (el.id ? 'id="' + htmlspecialchars(el.id) + '" ' : "") +
+//     'stroke-width="' +
+//     (el.size | 0) +
+//     '" ' +
+//     (el.opacity ? 'opacity="' + parseFloat(el.opacity) + '" ' : "") +
+//     'stroke="' +
+//     htmlspecialchars(el.color) +
+//     '" ' +
+//     'd="' +
+//     pathstring +
+//     '" ' +
+//     (el.deltax || el.deltay
+//       ? 'transform="translate(' + +el.deltax + "," + +el.deltay + ')"'
+//       : "") +
+//     "/>"
+//   );
+// }
+// 
+// const Tools = {
+//   /**
+//    * @return {string}
+//    */
+//   Text: function (el) {
+//     return (
+//       "<text " +
+//       'id="' +
+//       htmlspecialchars(el.id || "t") +
+//       '" ' +
+//       'x="' +
+//       (el.x | 0) +
+//       '" ' +
+//       'y="' +
+//       (el.y | 0) +
+//       '" ' +
+//       'font-size="' +
+//       (el.size | 0) +
+//       '" ' +
+//       'fill="' +
+//       htmlspecialchars(el.color || "#000") +
+//       '" ' +
+//       (el.deltax || el.deltay
+//         ? 'transform="translate(' +
+//           (el.deltax || 0) +
+//           "," +
+//           (el.deltay || 0) +
+//           ')"'
+//         : "") +
+//       ">" +
+//       htmlspecialchars(el.txt || "") +
+//       "</text>"
+//     );
+//   },
+//   /**
+//    * @return {string}
+//    */
+//   Pencil: function (el) {
+//     if (!el._children) return "";
+//     let pts = el._children.reduce(function (pts, point) {
+//       return wboPencilPoint(pts, point.x, point.y);
+//     }, []);
+//     const pathstring = pts
+//       .map(function (op) {
+//         return op.type + " " + op.values.join(" ");
+//       })
+//       .join(" ");
+//     return renderPath(el, pathstring);
+//   },
+//   /**
+//    * @return {string}
+//    */
+//   Rectangle: function (el) {
+//     return (
+//       "<rect " +
+//       (el.id ? 'id="' + htmlspecialchars(el.id) + '" ' : "") +
+//       'x="' +
+//       (el.x || 0) +
+//       '" ' +
+//       'y="' +
+//       (el.y || 0) +
+//       '" ' +
+//       'width="' +
+//       (el.x2 - el.x) +
+//       '" ' +
+//       'height="' +
+//       (el.y2 - el.y) +
+//       '" ' +
+//       'stroke="' +
+//       htmlspecialchars(el.color) +
+//       '" ' +
+//       'stroke-width="' +
+//       (el.size | 0) +
+//       '" ' +
+//       (el.deltax || el.deltay
+//         ? 'transform="translate(' +
+//           (el.deltax || 0) +
+//           "," +
+//           (el.deltay || 0) +
+//           ')"'
+//         : "") +
+//       "/>"
+//     );
+//   },
+//   /**
+//    * @return {string}
+//    */
+//   Ellipse: function (el) {
+//     const cx = Math.round((el.x2 + el.x) / 2);
+//     const cy = Math.round((el.y2 + el.y) / 2);
+//     const rx = Math.abs(el.x2 - el.x) / 2;
+//     const ry = Math.abs(el.y2 - el.y) / 2;
+//     const pathstring =
+//       "M" +
+//       (cx - rx) +
+//       " " +
+//       cy +
+//       "a" +
+//       rx +
+//       "," +
+//       ry +
+//       " 0 1,0 " +
+//       rx * 2 +
+//       ",0" +
+//       "a" +
+//       rx +
+//       "," +
+//       ry +
+//       " 0 1,0 " +
+//       rx * -2 +
+//       ",0";
+//     return renderPath(el, pathstring);
+//   },
+//   /**
+//    * @return {string}
+//    */
+//   "Straight line": function (el) {
+//     const pathstring = "M" + el.x + " " + el.y + "L" + el.x2 + " " + el.y2;
+//     return renderPath(el, pathstring);
+//   },
+// =======
+	return '<path class="nofill" ' +
+		(el.id ?
+			('id="' + htmlspecialchars(el.id) + '" ') : '') +
+		'stroke-width="' + (el.size | 0) + '" ' +
+		(el.opacity ?
+			('opacity="' + parseFloat(el.opacity) + '" ') : '') +
+		'stroke="' + htmlspecialchars(el.color) + '" ' +
+		'd="' + pathstring + '" ' +
+		(el.deltax || el.deltay ?
+			('transform="translate(' + (+el.deltax) + ',' + (+el.deltay) + ')"') : '') +
+		'/>';
 }
 
 const Tools = {
-  /**
-   * @return {string}
-   */
-  Text: function (el) {
-    return (
-      "<text " +
-      'id="' +
-      htmlspecialchars(el.id || "t") +
-      '" ' +
-      'x="' +
-      (el.x | 0) +
-      '" ' +
-      'y="' +
-      (el.y | 0) +
-      '" ' +
-      'font-size="' +
-      (el.size | 0) +
-      '" ' +
-      'fill="' +
-      htmlspecialchars(el.color || "#000") +
-      '" ' +
-      (el.deltax || el.deltay
-        ? 'transform="translate(' +
-          (el.deltax || 0) +
-          "," +
-          (el.deltay || 0) +
-          ')"'
-        : "") +
-      ">" +
-      htmlspecialchars(el.txt || "") +
-      "</text>"
-    );
-  },
-  /**
-   * @return {string}
-   */
-  Pencil: function (el) {
-    if (!el._children) return "";
-    let pts = el._children.reduce(function (pts, point) {
-      return wboPencilPoint(pts, point.x, point.y);
-    }, []);
-    const pathstring = pts
-      .map(function (op) {
-        return op.type + " " + op.values.join(" ");
-      })
-      .join(" ");
-    return renderPath(el, pathstring);
-  },
-  /**
-   * @return {string}
-   */
-  Rectangle: function (el) {
-    return (
-      "<rect " +
-      (el.id ? 'id="' + htmlspecialchars(el.id) + '" ' : "") +
-      'x="' +
-      (el.x || 0) +
-      '" ' +
-      'y="' +
-      (el.y || 0) +
-      '" ' +
-      'width="' +
-      (el.x2 - el.x) +
-      '" ' +
-      'height="' +
-      (el.y2 - el.y) +
-      '" ' +
-      'stroke="' +
-      htmlspecialchars(el.color) +
-      '" ' +
-      'stroke-width="' +
-      (el.size | 0) +
-      '" ' +
-      (el.deltax || el.deltay
-        ? 'transform="translate(' +
-          (el.deltax || 0) +
-          "," +
-          (el.deltay || 0) +
-          ')"'
-        : "") +
-      "/>"
-    );
-  },
-  /**
-   * @return {string}
-   */
-  Ellipse: function (el) {
-    const cx = Math.round((el.x2 + el.x) / 2);
-    const cy = Math.round((el.y2 + el.y) / 2);
-    const rx = Math.abs(el.x2 - el.x) / 2;
-    const ry = Math.abs(el.y2 - el.y) / 2;
-    const pathstring =
-      "M" +
-      (cx - rx) +
-      " " +
-      cy +
-      "a" +
-      rx +
-      "," +
-      ry +
-      " 0 1,0 " +
-      rx * 2 +
-      ",0" +
-      "a" +
-      rx +
-      "," +
-      ry +
-      " 0 1,0 " +
-      rx * -2 +
-      ",0";
-    return renderPath(el, pathstring);
-  },
-  /**
-   * @return {string}
-   */
-  "Straight line": function (el) {
-    const pathstring = "M" + el.x + " " + el.y + "L" + el.x2 + " " + el.y2;
-    return renderPath(el, pathstring);
-  },
+	/**
+	 * @return {string}
+	 */
+	Text: function (el) {
+		return '<text ' +
+			'id="' + htmlspecialchars(el.id || "t") + '" ' +
+			'x="' + (el.x | 0) + '" ' +
+			'y="' + (el.y | 0) + '" ' +
+			'font-size="' + (el.size | 0) + '" ' +
+			'fill="' + htmlspecialchars(el.color || "#000") + '" ' +
+			(el.deltax || el.deltay ? ('transform="translate(' + (el.deltax || 0) + ',' + (el.deltay || 0) + ')"') : '') +
+			'>' + htmlspecialchars(el.txt || "") + '</text>';
+	},
+	/**
+	 * @return {string}
+	 */
+	Mathematics: function (el) {
+		return '<svg ' +
+			'id="' + htmlspecialchars(el.id || "m") + '" ' +
+			'class="MathElement" ' +
+			'x="' + (el.x | 0) + '" ' +
+			'y="' + (el.y | 0) + '" ' +
+			'aria-label="' + htmlspecialchars(el.txt || "TeX not found") + '" ' +
+			'width="' + (el.mWidth || 0) + '" ' +
+			'height="' + (el.mHeight || 0) + '" ' +
+			'viewBox="' + (el.mViewBox || 0) + '" ' +
+			(el.deltax || el.deltay ? ('transform="translate(' + (el.deltax || 0) + ',' + (el.deltay || 0) + ')"') : '') +
+			'>' + (el.mInnerHTML || '') + '</svg>';
+	},
+	/**
+	 * @return {string}
+	 */
+	Pencil: function (el) {
+		if (!el._children) return "";
+		let pts = el._children.reduce(function (pts, point) {
+			return wboPencilPoint(pts, point.x, point.y);
+		}, []);
+		const pathstring = pts.map(function (op) {
+			return op.type + ' ' + op.values.join(' ')
+		}).join(' ');
+		return renderPath(el, pathstring);
+	},
+	/**
+	 * @return {string}
+	 */
+	Rectangle: function (el) {
+		return '<rect class="nofill" ' +
+			(el.id ?
+				('id="' + htmlspecialchars(el.id) + '" ') : '') +
+			'x="' + (el.x || 0) + '" ' +
+			'y="' + (el.y || 0) + '" ' +
+			'width="' + (el.x2 - el.x) + '" ' +
+			'height="' + (el.y2 - el.y) + '" ' +
+			'stroke="' + htmlspecialchars(el.color) + '" ' +
+			'stroke-width="' + (el.size | 0) + '" ' +
+			(el.deltax || el.deltay ? ('transform="translate(' + (el.deltax || 0) + ',' + (el.deltay || 0) + ')"') : '') +
+			'/>';
+	},
+	/**
+	 * @return {string}
+	 */
+	Ellipse: function (el) {
+		const cx = Math.round((el.x2 + el.x) / 2);
+		const cy = Math.round((el.y2 + el.y) / 2);
+		const rx = Math.abs(el.x2 - el.x) / 2;
+		const ry = Math.abs(el.y2 - el.y) / 2;
+		const pathstring =
+			"M" + (cx - rx) + " " + cy +
+			"a" + rx + "," + ry + " 0 1,0 " + (rx * 2) + ",0" +
+			"a" + rx + "," + ry + " 0 1,0 " + (rx * -2) + ",0";
+		return renderPath(el, pathstring);
+	},
+	/**
+	 * @return {string}
+	 */
+	"Straight line": function (el) {
+		const pathstring = "M" + el.x + " " + el.y + "L" + el.x2 + " " + el.y2;
+		return renderPath(el, pathstring);
+	}
 };
 
 /**
@@ -171,40 +266,60 @@ const Tools = {
  * @param {WritableStream} writeable
  */
 async function toSVG(obj, writeable) {
-  const margin = 400;
-  const elems = Object.values(obj);
-  const dim = elems.reduce(
-    function (dim, elem) {
-      if (elem._children && elem._children.length) elem = elem._children[0];
-      return [
-        Math.max((elem.x + margin + (elem.deltax | 0)) | 0, dim[0]),
-        Math.max((elem.y + margin + (elem.deltay | 0)) | 0, dim[1]),
-      ];
-    },
-    [margin, margin]
-  );
-  writeable.write(
-    '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" ' +
-      'width="' +
-      dim[0] +
-      '" height="' +
-      dim[1] +
-      '">' +
-      '<defs><style type="text/css"><![CDATA[' +
-      'text {font-family:"Arial"}' +
-      "path {fill:none;stroke-linecap:round;stroke-linejoin:round;}" +
-      "rect {fill:none}" +
-      "]]></style></defs>"
-  );
-  await Promise.all(
-    elems.map(async function (elem) {
-      await Promise.resolve(); // Do not block the event loop
-      const renderFun = Tools[elem.tool];
-      if (renderFun) writeable.write(renderFun(elem));
-      else console.warn("Missing render function for tool", elem.tool);
-    })
-  );
-  writeable.write("</svg>");
+	const margin = 400;
+	const elems = Object.values(obj);
+	const dim = elems.reduce(function (dim, elem) {
+		if (elem._children) elem = elem._children[0];
+		return [
+			Math.max(elem.x + margin + (elem.deltax | 0) | 0, dim[0]),
+			Math.max(elem.y + margin + (elem.deltay | 0) | 0, dim[1]),
+		]
+	}, [margin, margin]);
+//<<<<<<< HEAD
+//  writeable.write(
+//    '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" ' +
+//      'width="' +
+//      dim[0] +
+//      '" height="' +
+//      dim[1] +
+//      '">' +
+//      '<defs><style type="text/css"><![CDATA[' +
+//      'text {font-family:"Arial"}' +
+//      "path {fill:none;stroke-linecap:round;stroke-linejoin:round;}" +
+//      "rect {fill:none}" +
+//      "]]></style></defs>"
+//  );
+//  await Promise.all(
+//    elems.map(async function (elem) {
+//      await Promise.resolve(); // Do not block the event loop
+//      const renderFun = Tools[elem.tool];
+//      if (renderFun) writeable.write(renderFun(elem));
+//      else console.warn("Missing render function for tool", elem.tool);
+//    })
+//  );
+//  writeable.write("</svg>");
+//=======
+	writeable.write(
+		'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" ' +
+		'xmlns:xlink="http://www.w3.org/1999/xlink" ' +
+		'width="' + dim[0] + '" height="' + dim[1] + '">' +
+		'<defs><style type="text/css"><![CDATA[' +
+		'text {font-family:"Arial", "Helvetica", sans-serif; user-select:none; -moz-user-select:none;}' +
+		'path {stroke-linecap:round;stroke-linejoin:round;}' +
+		'path.nofill {fill:none}' +
+		'rect.nofill {fill:none}' +
+		'ellipse.nofill {fill:none}' +
+		'line.nofill {fill:none}' +
+		']]></style></defs>'
+	);
+	await Promise.all(elems.map(async function (elem) {
+		await Promise.resolve(); // Do not block the event loop
+		const renderFun = Tools[elem.tool];
+		if (renderFun) writeable.write(renderFun(elem));
+		else console.warn("Missing render function for tool", elem.tool);
+	}));
+	writeable.write('</svg>');
+//>>>>>>> 7e2e80d629685d267e3032dde29f7e6265e32b0f
 }
 
 async function renderBoard(file, stream) {
