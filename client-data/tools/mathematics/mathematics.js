@@ -70,7 +70,7 @@
 		}
 		var parentMathematics = els.find(el => el.getAttribute("class") === "MathElement");
 		if ((parentMathematics) && parentMathematics.tagName === "svg") {
-			editOldMathematics(parentMathematics);
+			editOldMathematics(parentMathematics.parent);
 			evt.preventDefault();
 			return;
 		}
@@ -86,7 +86,8 @@
 		evt.preventDefault();
 	}
 
-	function editOldMathematics(elem) {
+	function editOldMathematics(group) {
+        elem = group.children[0];
 		curText.id = elem.id;
 		var r = elem.getBoundingClientRect();
 		var x = (r.left + document.documentElement.scrollLeft) / Tools.scale;
@@ -215,13 +216,29 @@
 				}
 				updateMathematics(mathematicsField, data.txt, data.mWidth, data.mHeight, data.mViewBox, data.mInnerHTML);
 				break;
+			//case "translate":
+            //    console.log("translating");
+			//	var mathematicsField = document.getElementById(data.id);
+			//	if (mathematicsField === null) {
+			//		console.error("Mathematics: Hmmm... I received text that belongs to an unknown text field");
+			//		return false;
+			//	}
+            //    var x = Number(mathematicsField.getAttribute('x'));
+            //    var y = Number(mathematicsField.getAttribute('y'));
+            //    console.log("x,y", x, y, x+data.deltax/3, y+data.deltay/3);
+            //    mathematicsField.setAttribute('x', x + data.deltax);
+            //    mathematicsField.setAttribute('y', y + data.deltay);
+			//	break;
 			default:
 				console.error("Mathematics: Draw instruction with unknown type. ", data);
 				break;
 		}
 	}
 
-	function updateMathematics(mathematicsField, rawTeX, mWidth, mHeight, mViewBox, mInnerHTML) {
+	function updateMathematics(mathematicsGroup, rawTeX, mWidth, mHeight, mViewBox, mInnerHTML) {
+		mathematicsGroup.setAttribute('width', mWidth);
+		mathematicsGroup.setAttribute('height', mHeight);
+        mathematicsField = mathematicsGroup.children[0];
 		mathematicsField.setAttribute('aria-label', rawTeX);
 		mathematicsField.setAttribute('width', mWidth);
 		mathematicsField.setAttribute('height', mHeight);
@@ -230,16 +247,22 @@
 	}
 
 	function createMathematicsField(fieldData) {
-		var elem = Tools.createSVGElement("svg");
-		elem.id = fieldData.id;
+        // svg as top doesn't support transformations in chrome
+        // haven't tested in other browsers, so I am simply putting all of this inside a group
+        var elem = Tools.createSVGElement("svg"); 
+        var group = Tools.createSVGElement("g");  
+		group.setAttribute("class", "MathElement");
+		group.id = fieldData.id;
+		elem.id = fieldData.id + "elem";
 		elem.setAttribute("class", "MathElement");
 		elem.setAttribute("x", fieldData.x);
 		elem.setAttribute("y", fieldData.y);
+        group.appendChild(elem);
 		if (fieldData.txt) elem.setAttribute("aria-label", fieldData.txt);
 		if ((fieldData.mWidth && fieldData.mHeight) && (fieldData.mViewBox && fieldData.mInnerHTML)) {
-			updateMathematics(elem, fieldData.txt, fieldData.mWidth, fieldData.mHeight, fieldData.mViewBox, fieldData.mInnerHTML);
+			updateMathematics(group, fieldData.txt, fieldData.mWidth, fieldData.mHeight, fieldData.mViewBox, fieldData.mInnerHTML);
 		}
-		Tools.drawingArea.appendChild(elem);
+		Tools.drawingArea.appendChild(group);
 		return elem;
 	}
 

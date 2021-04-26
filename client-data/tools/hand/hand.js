@@ -39,10 +39,7 @@
         if ((x < bbox.x) || (y < bbox.y) || (y > bbox.y + bbox.height) || (x > bbox.x + bbox.width))
             return Number.MAX_VALUE;
 
-        if (stroke.tagName == 'text' || stroke.tagName == 'svg') {
-            console.log("  is text/svg");
-            return 0;
-        }
+        if (stroke.tagName == 'text' || stroke.tagName == 'svg') return 0;
 
         var d, dist=Number.MAX_VALUE;
         for (d=0; d < stroke.getTotalLength(); d+=PATH_STEP_SIZE) {
@@ -56,7 +53,6 @@
 
 	function startMovingElement(x, y, evt) {
 		//Prevent the press from being interpreted by the browser
-        console.log(evt, x, y);
 		evt.preventDefault();
         var target = null;
         if (!evt.target || !Tools.drawingArea.contains(evt.target)) { 
@@ -78,7 +74,6 @@
             target = min_child;
         } else {
             // directly selected target. 
-            console.log("traversing parentage", evt.target);
             target = evt.target;
             // Check for parent that is MathElement
 		    var a = target;
@@ -88,10 +83,9 @@
 		    	a = a.parentElement;
 		    }
 		    var parentMathematics = els.find(el => el.getAttribute("class") === "MathElement");
-		    if ((parentMathematics) && parentMathematics.tagName === "svg") {
+		    if ((parentMathematics) && parentMathematics.tagName === "g") {
 		    	target = parentMathematics;
 		    }
-            console.log("final parent", target);
         }
 		// search for a parent that is a MathElement. If one is found then act on that instead.
 		var tmatrix = get_translate_matrix(target);
@@ -102,11 +96,11 @@
 		if (!selected) return;
 		var deltax = x - selected.x;
 		var deltay = y - selected.y;
-		var msg = { type: "update", id: selected.elem.id, deltax: deltax, deltay: deltay };
+		var msg = { type: "update", id: selected.elem.id, deltax: deltax, deltay: deltay };;
 		var now = performance.now();
 		if (now - last_sent > 70) {
 			last_sent = now;
-			Tools.drawAndSend(msg);
+			Tools.drawAndSend(msg); // doesn't seem to work for math
 		} else {
 			draw(msg);
 		}
@@ -135,14 +129,15 @@
 		switch (data.type) {
 			case "update":
 				var elem = Tools.svg.getElementById(data.id);
+                console.log(data.id, elem);
 				if (!elem) throw new Error("Mover: Tried to move an element that does not exist.");
-				var tmatrix = get_translate_matrix(elem);
-				tmatrix.e = data.deltax || 0;
-				tmatrix.f = data.deltay || 0;
+                var tmatrix = get_translate_matrix(elem);
+                tmatrix.e = data.deltax || 0;
+                tmatrix.f = data.deltay || 0;
 				break;
 
 			default:
-				throw new Error("Mover: 'move' instruction with unknown type. ", data);
+				console.error("Mover: 'move' instruction with unknown type. ", data);
 		}
 	}
 

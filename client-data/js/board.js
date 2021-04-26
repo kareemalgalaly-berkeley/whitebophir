@@ -560,8 +560,13 @@ Tools.generateUID = function (prefix, suffix) {
 
 Tools.createSVGElement = function createSVGElement(name, attrs) {
 	var elem = document.createElementNS(Tools.svg.namespaceURI, name);
-	if (typeof (attrs) !== "object") return elem;
+    console.log(attrs);
+	if (typeof (attrs) !== "object") {
+        console.log("short");
+        return elem;
+    }
 	Object.keys(attrs).forEach(function (key, i) {
+        console.log("stuff", key, attrs[key]);
 		elem.setAttributeNS(null, key, attrs[key]);
 	});
 	return elem;
