@@ -62,7 +62,7 @@
 				a = a.parentElement;
 			}
 			var parentMathematics = els.find(el => el.getAttribute("class") === "MathElement");
-			if ((parentMathematics) && parentMathematics.tagName === "svg") {
+			if ((parentMathematics) && parentMathematics.tagName === "g") {
 				target = parentMathematics;
 			}
 			msg.id = target.id;
