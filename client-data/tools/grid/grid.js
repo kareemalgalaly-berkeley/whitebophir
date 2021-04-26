@@ -47,8 +47,8 @@
             Tools.createSVGElement("path", {
                 d: "M 30 0 L 0 0 0 30",
                 fill: "none",
-                stroke: "gray",
-                'stroke-width': "0.5"
+                opacity: "0.25",
+                stroke: "gray", 'stroke-width': "4"
             })
         );
         // (outer) grid
@@ -67,7 +67,7 @@
             Tools.createSVGElement("path", {
                 d: "M 300 0 L 0 0 0 300",
                 fill: "none",
-                stroke: "gray", 'stroke-width': "1"
+                stroke: "gray", 'stroke-width': "4"
             })
         );
         // dots
