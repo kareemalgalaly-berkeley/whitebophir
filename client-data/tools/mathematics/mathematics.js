@@ -29,7 +29,7 @@
 
 	var input = document.createElement("textarea");
 	input.id = "textToolInput";
-	input.setAttribute("autocomplete", "off");
+	input.setAttribute("autocomplete", "true");
 
 
 	var curText = {
@@ -109,15 +109,17 @@
 		input.value = "";
 		var clientW = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var x = curText.x * Tools.scale - document.documentElement.scrollLeft;
-		if (x < 360) {
-			x = Math.max(60, clientW - 320);
-		} else {
-			x = 60;
-		}
+		//if (x < 360) {
+		//	x = Math.max(60, clientW - 320);
+		//} else {
+		//	x = 60;
+		//}
+        //x = curText.x;
+        //y = curText.y + 50;
 
 		input.style.opacity = '0.5';
-		input.style.left = x + 'px';
-		input.style.top = curText.y * Tools.scale - document.documentElement.scrollTop - 20 + 'px';
+		input.style.left = curText.x * Tools.scale + 'px';
+		input.style.top  = curText.y * Tools.scale - document.documentElement.scrollTop + 50 + 'px';
 		input.style.height = '150px';
 		input.style.width = '300px';
 		input.focus();
