@@ -1,11 +1,35 @@
-#textToolInput {
+#MathInputContainer {
 	position:fixed;
 	top:-1000px; /*Hidden*/
-	left: 80px;
-	width:500px;
+    right:10%;
+    left:10%;
+	height:300px;
+
+    display: flex;
+    flex-direction: row;
+    border: 1px solid;
 }
-#textToolInput:focus {
-	top: 5px;
+
+#MathInput {
+    flex-grow: 3;
+}
+
+.MathButtonContainer {
+    flex-grow: 1;
+
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    padding: 0 0.1em;
+}
+
+.MathButton {
+    padding: 0.2em;
+    text-align: center;
+    font-size: 0.8em;
+}
+.MathButton:hover {
+    background-color: #DDD;
 }
 
 text {

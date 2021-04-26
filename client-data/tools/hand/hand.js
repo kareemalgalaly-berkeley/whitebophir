@@ -132,7 +132,6 @@
 		switch (data.type) {
 			case "update":
 				var elem = Tools.svg.getElementById(data.id);
-                console.log(data.id, elem);
 				if (!elem) throw new Error("Mover: Tried to move an element that does not exist.");
                 var tmatrix = get_translate_matrix(elem);
                 tmatrix.e = data.deltax || 0;

@@ -27,10 +27,16 @@
 (function () { //Code isolation
 	var board = Tools.board;
 
-	var input = document.createElement("textarea");
-	input.id = "textToolInput";
-	input.setAttribute("autocomplete", "true");
-
+    var autofillButtons = [
+        ["Integral", "\\int_{a}^{b}"], 
+        ["Sum"     , "\\sum_{a}^{b}"],
+        ["Matrix"  , "\\begin{bmatrix}a&b\\\\c&d\\end{bmatrix}"], 
+        ["Vector"  , "\\vec{x}"],
+        ["Fraction", "\\frac{a}{b}"],
+    ];
+    var inputContainer = createInputBlock();
+    var input = inputContainer.children[0];
+    console.log(input);
 
 	var curText = {
 		"x": 0,
@@ -47,6 +53,46 @@
 
 	var active = false;
 
+    function createInputBlock() {
+        var container = document.createElement("div");
+        container.setAttribute("id", "MathInputContainer");
+
+        var input = document.createElement("textarea");
+        input.id = "MathInput";
+	    input.setAttribute("autocomplete", "false");
+        container.appendChild(input);
+
+        var buttons = document.createElement("div");
+        buttons.setAttribute("class", "MathButtonContainer");
+        container.appendChild(buttons);
+
+        autofillButtons.forEach(function(data, index){
+            var btn = document.createElement("div");
+            btn.setAttribute("class", "MathButton");
+            btn.setAttribute("id", "MathButton" + data[0]);
+            btn.innerHTML = "$$" + data[1] + "$$";
+            buttons.appendChild(btn);
+        });
+
+        board.append(container);
+
+        return container;
+    }
+
+    function onBtnClick(evt) {
+        console.log(evt);
+        var i, str = input.value;
+        for (i=0; i<autofillButtons.length; i++) {
+            if (evt.target.id.endsWith(autofillButtons[i][0])) {
+                //input.value += autofillButtons[i][1];
+                input.value = str.slice(0,input.selectionStart) 
+                              + autofillButtons[i][1] 
+                              + str.slice(input.selectionEnd, str.length);
+                break;
+            }
+        }
+        textChangeHandler(evt);
+    }
 
 	function onStart() {
 		curText.oldSize = Tools.getSize();
@@ -62,6 +108,18 @@
 		//if(document.querySelector("#menu").offsetWidth>Tools.menu_width+3) return;
 		// Assemble a list of parents of the evt.target and search it to see if any has class "MathElement"
         if (evt.target === input) return;
+        if (evt.target.className === "MathButton") return onBtnClick(evt);
+        console.log("starting with", evt.target);
+        if (evt.target != board && evt.target != board.children[0]) {
+            var target = evt.target;
+            while ((target.tagName.toLowerCase() != "div") && target.parentElement) {
+                target = target.parentElement;
+                console.log(target.tagName, target);
+            } 
+            if (target && target.tagName.toLowerCase() === "div" && target.className === "MathButton") 
+                return onBtnClick({target: target, which:evt.which});
+        } 
+
 		var a = evt.target;
 		var els = [];
 		while (a) {
@@ -82,7 +140,7 @@
 		curText.y = y + curText.size / 2;
 
 		stopEdit();
-		startEdit();
+		startEdit(parentMathematics);
 		evt.preventDefault();
 	}
 
@@ -99,16 +157,17 @@
 		curText.size = parseInt(elem.getAttribute("font-size"));
 		curText.opacity = parseFloat(elem.getAttribute("opacity"));
 		curText.color = elem.getAttribute("fill");
-		startEdit();
+		startEdit(group);
 		input.value = elem.getAttribute("aria-label");
 	}
 
-	function startEdit() {
+	function startEdit(mathematicsGroup) {
 		active = true;
-		if (!input.parentNode) board.appendChild(input);
+        //if (!inputContainer.parentNode) board.appendChild(inputContainer);
 		input.value = "";
 		var clientW = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var x = curText.x * Tools.scale - document.documentElement.scrollLeft;
+		var y = curText.y * Tools.scale - document.documentElement.scrollTop;
 		//if (x < 360) {
 		//	x = Math.max(60, clientW - 320);
 		//} else {
@@ -118,10 +177,8 @@
         //y = curText.y + 50;
 
 		input.style.opacity = '0.5';
-		input.style.left = curText.x * Tools.scale + 'px';
-		input.style.top  = curText.y * Tools.scale - document.documentElement.scrollTop + 50 + 'px';
-		input.style.height = '150px';
-		input.style.width = '300px';
+        //inputContainer.style.left = x + 'px';
+		inputContainer.style.top  = y + 50 + 'px';
 		input.focus();
 		input.addEventListener("keyup", textChangeHandler);
 		input.addEventListener("blur", textChangeHandler);
@@ -140,7 +197,7 @@
 
 	function blur() {
 		if (active) return;
-		input.style.top = '-1000px';
+		inputContainer.style.top = '-1000px';
 	}
 
 	function textChangeHandler(evt) {
