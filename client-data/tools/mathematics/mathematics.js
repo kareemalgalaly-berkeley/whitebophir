@@ -166,8 +166,11 @@
         //if (!inputContainer.parentNode) board.appendChild(inputContainer);
 		input.value = "";
 		var clientW = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+		var clientH = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		var x = curText.x * Tools.scale - document.documentElement.scrollLeft;
 		var y = curText.y * Tools.scale - document.documentElement.scrollTop;
+
+        // Horizontal Placement Style
 		//if (x < 360) {
 		//	x = Math.max(60, clientW - 320);
 		//} else {
@@ -176,9 +179,19 @@
         //x = curText.x;
         //y = curText.y + 50;
 
+        // Vertical Placement Style
+        if (y > clientH/2) {
+            console.log("above", inputContainer.style, inputContainer.offsetHeight);
+            y = y - inputContainer.offsetHeight - 100; 
+        } else {
+            console.log("below");
+            y = y + 100;
+        }
+
 		input.style.opacity = '0.5';
         //inputContainer.style.left = x + 'px';
-		inputContainer.style.top  = y + 50 + 'px';
+        console.log(y, clientH);
+		inputContainer.style.top  = y + 'px';
 		input.focus();
 		input.addEventListener("keyup", textChangeHandler);
 		input.addEventListener("blur", textChangeHandler);
