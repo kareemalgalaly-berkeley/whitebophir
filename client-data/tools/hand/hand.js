@@ -31,19 +31,22 @@
     var PATH_STEP_SIZE = 50;
 
     // Helper functions
-    function distanceFromCursor(evt, stroke) {
-        var bbox = stroke.getBoundingClientRect(); // Relative to window
-        x = evt.clientX; // Relative to window
+    function pointInBBox(x, y, bbox) {
+        return ((x > bbox.x) && (y > bbox.y) && (y > bbox.y + bbox.height) && (x > bbox.x + bbox.width));
+    }
+    function distanceFromCursor(evt, element) {
+        // Coordinates relative to window
+        var bbox = element.getBoundingClientRect(); 
+        x = evt.clientX; 
         y = evt.clientY;
 
-        if ((x < bbox.x) || (y < bbox.y) || (y > bbox.y + bbox.height) || (x > bbox.x + bbox.width))
-            return Number.MAX_VALUE;
+        if (!pointInBBox(x, y, bbox)) return Number.MAX_VALUE;
 
-        if (stroke.tagName == 'text' || stroke.tagName == 'svg') return 0;
+        if (element.tagName == 'text' || element.className.baseVal == 'MathElement') return 0;
 
         var d, dist=Number.MAX_VALUE;
-        for (d=0; d < stroke.getTotalLength(); d+=PATH_STEP_SIZE) {
-            var pt = stroke.getPointAtLength(d);
+        for (d=0; d < element.getTotalLength(); d+=PATH_STEP_SIZE) {
+            var pt = element.getPointAtLength(d);
             dist = Math.min(dist, Math.abs(pt.x - x) + Math.abs(pt.y - y));
         }
         return dist;
