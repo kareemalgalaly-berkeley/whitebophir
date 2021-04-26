@@ -69,8 +69,8 @@
 			a = a.parentElement;
 		}
 		var parentMathematics = els.find(el => el.getAttribute("class") === "MathElement");
-		if ((parentMathematics) && parentMathematics.tagName === "svg") {
-			editOldMathematics(parentMathematics.parent);
+		if ((parentMathematics) && parentMathematics.tagName === "g") {
+			editOldMathematics(parentMathematics);
 			evt.preventDefault();
 			return;
 		}
@@ -87,12 +87,12 @@
 	}
 
 	function editOldMathematics(group) {
-        elem = group.children[0];
-		curText.id = elem.id;
-		var r = elem.getBoundingClientRect();
+		curText.id = group.id;
+		var r = group.getBoundingClientRect();
 		var x = (r.left + document.documentElement.scrollLeft) / Tools.scale;
 		var y = (r.top + r.height + document.documentElement.scrollTop) / Tools.scale;
 
+        elem = group.children[0];
 		curText.x = x;
 		curText.y = y;
 		curText.sentText = elem.getAttribute("aria-label");
