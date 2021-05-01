@@ -112,25 +112,25 @@ html, body, svg {
 	pointer-events: auto;
 	white-space: nowrap;
 	list-style-position:inside;
-	border:1px solid #eeeeee;
+	/*border:1px solid #eeeeee;*/
 	text-decoration:none;
 	cursor:pointer;
-	background: #ffffff;
+	/*background: #ffffff;*/
 	height: 40px;
 	line-height: 40px;
-	border-radius: 0px;
+	border-radius: 50%;
 	max-width: 40px;
 	/*transition-duration: .2s;*/
 
-    margin: 10px; 
+    padding: 10px; /*margin bad*/
 
 	overflow: hidden;
 	width: max-content;
-	box-shadow: inset 0 0 3px #8FA2BC;
+	/*box-shadow: inset 0 0 3px #8FA2BC;*/
 }
 
 .menu .tool:hover {
-	max-width: 280px;
+	max-width: 100%;
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -231,20 +231,20 @@ input {
 }
 
 #chooseColor {
-	width: 100%;
-	height:100%;
+	width: 40px;
+	height:40px;
 	border: 0;
 	border-radius: 0;
 	color:black;
-	display: block;
+	display: inline-block;
 	margin: 0;
 	padding: 0;
 }
 
 .colorPresets {
-	margin-right: 20px;
+	/*margin-right: 20px;*/
 	vertical-align: top;
-	display: inline-block;
+	/*display: inline-block;*/
 }
 
 .colorPresetButton {
@@ -253,8 +253,7 @@ input {
 	border: 1px solid black;
 	border-radius: 3px;
 	display: inline-block;
-	margin-right: 6px;
-	padding: 0;
+	margin: 6px;
 	vertical-align: middle;
 }
 
