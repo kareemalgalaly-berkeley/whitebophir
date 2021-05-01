@@ -35,29 +35,46 @@ html, body, svg {
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-#menu::-webkit-scrollbar {
+.menu::-webkit-scrollbar {
 	display: none;
 }
 
-#menu {
+.menu {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 	font-size: 16px;
-	border-radius: 0;
 	overflow-y: scroll;
-	position: fixed;
-	margin-bottom: 30px;
-	left: 0;
-	top: 0;
+	/*margin-bottom: 30px;*/
 	color: black;
 	max-height: 100%;
-	transition-duration: 1s;
 	cursor: default;
-	padding: 10px;
 	pointer-events: none;
+
+    background: #DDD;
+	/*transition-duration: 1s;*/
 }
 
-#menu.closed {
+#toolsMenu {
+	position: fixed;
+	left: 0px;
+    top: 50vh;
+    transform: translateY(-50%);
+    margin: 0px;
+
+	border-radius: 0 20px 20px 0;
+}
+
+#settingsMenu {
+	position: fixed;
+	right: 0px;
+    top: 50vh;
+    transform: translateY(-50%);
+    margin: 0px;
+
+	border-radius: 20px 0 0 20px;
+}
+
+/*.menu.closed {
 	border-radius:3px;
 	left:10px;
 	top:10px;
@@ -65,9 +82,9 @@ html, body, svg {
 	width:6vw;
 	height:2em;
 	transition-duration:1s;
-}
+}*/
 
-#menu h2{ /*Menu title ("Menu")*/
+.menu h2{ /*Menu title ("Menu")*/
 	display: none;
 	font-size:4vh;
 	text-align: center;
@@ -78,16 +95,12 @@ html, body, svg {
 	margin:0;
 }
 
-#menu .tools {
+.menu .tools {
 	list-style-type:none;
-	padding:0;
+	padding: 10px;
 }
 
-#settings {
-	margin-bottom: 0;
-}
-
-#menu .tool {
+.menu .tool {
 	position: relative;
 	-webkit-touch-callout: none; /* iOS Safari */
 	-webkit-user-select: none; /* Safari */
@@ -103,12 +116,14 @@ html, body, svg {
 	text-decoration:none;
 	cursor:pointer;
 	background: #ffffff;
-	margin-top: 10px;
 	height: 40px;
 	line-height: 40px;
 	border-radius: 0px;
 	max-width: 40px;
-	transition-duration: .2s;
+	/*transition-duration: .2s;*/
+
+    margin: 10px; 
+
 	overflow: hidden;
 	width: max-content;
 	box-shadow: inset 0 0 3px #8FA2BC;
@@ -119,40 +134,40 @@ html, body, svg {
 }
 
 @media (hover: none), (pointer: coarse) {
-	#menu .tool:hover {
+	.menu .tool:hover {
 		max-width: 40px;
 	}
 
-	#menu .tool:focus {
+	.menu .tool:focus {
 		max-width: 100%;
 	}
 
-	#menu {
+	.menu {
 		pointer-events: auto;
 	}
 
-	#menu:focus-within {
+	.menu:focus-within {
 		pointer-events: none;
 	}
 
 }
 
-#menu .oneTouch:active {
+.menu .oneTouch:active {
 	border-radius: 3px;
 	background-color:#eeeeff;
 }
 
-#menu .tool:active {
+.menu .tool:active {
 	box-shadow: inset 0 0 1px #ddeeff;
 	background-color:#eeeeff;
 }
 
-#menu .tool.curTool {
+.menu .tool.curTool {
   box-shadow: 0 0 5px #0074D9;
   background: linear-gradient(#96E1FF, #36A2FF);
 }
 
-#menu .tool-icon {
+.menu .tool-icon {
 	display: inline-block;
 	text-align:center;
 	width: 35px;
@@ -162,16 +177,16 @@ html, body, svg {
 	overflow: hidden;
 }
 
-#menu img.tool-icon {
+.menu img.tool-icon {
 	pointer-events: none;
 }
 
-#menu .tool-icon > * {
+.menu .tool-icon > * {
 	display: block;
 	margin: auto;
 }
 
-#menu .tool-name {
+.menu .tool-name {
 	text-align: center;
 	font-size: 23px;
 	margin-right: 20px;
@@ -179,8 +194,9 @@ html, body, svg {
 	margin-bottom: 2.5px;
 	display: inline-block;
 	vertical-align: text-bottom;
+    display: none;
 }
-#menu .tool-name.slider {
+.menu .tool-name.slider {
 	display: inline-block;
     width: 150px;
     height: 30px;
@@ -188,19 +204,20 @@ html, body, svg {
     line-height: 15px;
     vertical-align: top;
     padding: 6px;
+    left: 50px;
 
 }
 
-#menu .tool.hasSecondary .tool-icon{
+.menu .tool.hasSecondary .tool-icon{
 	margin-top:0px;
 	margin-left:0px;
 }
 
-#menu .tool .tool-icon.secondaryIcon{
+.menu .tool .tool-icon.secondaryIcon{
 	display: none;
 }
 
-#menu .tool.hasSecondary .tool-icon.secondaryIcon{
+.menu .tool.hasSecondary .tool-icon.secondaryIcon{
 	display: block;
 	position: absolute;
     bottom: 0px;
