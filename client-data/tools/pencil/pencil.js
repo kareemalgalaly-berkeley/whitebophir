@@ -204,7 +204,7 @@
 		},
 		"secondary": {
 			"name": "White-out",
-			"icon": "tools/pencil/whiteout_tape.svg",
+			"icon": "tools/pencil/pen_eraser.svg",
 			"active": false,
 			"switch": function() {
 				stopLine();

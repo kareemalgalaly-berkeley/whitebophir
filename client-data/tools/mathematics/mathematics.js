@@ -30,6 +30,7 @@
     var autofillButtons = [
         ["Integral", "\\int_{a}^{b}"], 
         ["Sum"     , "\\sum_{a}^{b}"],
+        ["Vector2" , "\\begin{bmatrix}a\\\\b\\end{bmatrix}"], 
         ["Matrix"  , "\\begin{bmatrix}a&b\\\\c&d\\end{bmatrix}"], 
         ["Vector"  , "\\vec{x}"],
         ["Fraction", "\\frac{a}{b}"],
@@ -164,7 +165,7 @@
 	function startEdit(mathematicsGroup) {
 		active = true;
         //if (!inputContainer.parentNode) board.appendChild(inputContainer);
-		input.value = "";
+		input.value = "Write Equation Here";
 		var clientW = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var clientH = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		var x = curText.x * Tools.scale - document.documentElement.scrollLeft;
@@ -178,6 +179,9 @@
 		//}
         //x = curText.x;
         //y = curText.y + 50;
+        if (x > clientW/2.5) {
+            x = clientW/2.5;
+        }
 
         // Vertical Placement Style
         if (y > clientH/2) {
@@ -189,13 +193,14 @@
         }
 
 		input.style.opacity = '0.5';
-        //inputContainer.style.left = x + 'px';
+        inputContainer.style.left = x + 'px'; // toggle
         console.log(y, clientH);
 		inputContainer.style.top  = y + 'px';
 		input.focus();
 		input.addEventListener("keyup", textChangeHandler);
 		input.addEventListener("blur", textChangeHandler);
 		input.addEventListener("blur", blur);
+        textChangeHandler({which:1});
 	}
 
 	function stopEdit() {

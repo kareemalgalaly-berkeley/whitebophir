@@ -8,14 +8,14 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="cursor.svg"
-   id="svg12"
+   sodipodi:docname="eraser.svg"
+   id="svg6"
    version="1.1"
-   viewBox="0 0 60 60"
-   height="30"
-   width="30">
+   width="512pt"
+   viewBox="0 0 511 512"
+   height="512pt">
   <metadata
-     id="metadata16">
+     id="metadata12">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -25,13 +25,15 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <defs
+     id="defs10" />
   <sodipodi:namedview
-     inkscape:current-layer="svg12"
-     inkscape:cy="4.1248286"
-     inkscape:cx="2.7128596"
-     inkscape:zoom="11.390661"
+     inkscape:current-layer="svg6"
+     inkscape:cy="148.44857"
+     inkscape:cx="229.78079"
+     inkscape:zoom="0.50056618"
      showgrid="false"
-     id="namedview14"
+     id="namedview8"
      inkscape:window-height="480"
      inkscape:window-width="640"
      inkscape:pageshadow="2"
@@ -42,12 +44,10 @@
      borderopacity="1"
      bordercolor="#666666"
      pagecolor="#ffffff" />
-  <defs
-     id="defs2" />
   <g
      style="fill:#484848;fill-opacity:1"
      id="g879"
-     transform="matrix(-7.8739801,-7.8739801,7.8739801,-7.8739801,108.11786,137.2844)">
+     transform="matrix(52.905341,-52.905341,52.905341,52.905341,-502.92788,818.8774)">
     <rect
        ry="0.070158251"
        y="1.3229166"
